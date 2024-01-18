@@ -1,0 +1,55 @@
+---
+title: "explore_handeset"
+author: "PenguinJunk"
+date: "2024-01-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import first data set
+
+HanDeSet is a csv, available at [HanDeSeT: Hansard Debates with Sentiment Tags](https://research.manchester.ac.uk/en/datasets/handeset-hansard-debates-with-sentiment-tags). Import it. Errors when trying to print out the resulting tibble because on non-ascii characters so set encoding to utf-8.
+
+```{r handeset.tib}
+library(dplyr)
+handeset.tib <- read.csv("./data/HanDeSeT.csv", header=TRUE, fileEncoding = "UTF-8") |> dplyr::as_tibble()
+```
+
+See what in the dataset.
+```{r handeset.tib names}
+#names(handeset.tib)
+glimpse(handeset.tib)
+
+# motion.party.affiliation and party.affiliation are strings labelling the party of the MP making the motion or responding to the motion, respectively. Convert these to factors:
+handeset.tib <- handeset.tib |> 
+  mutate(party.affiliation = factor(x = party.affiliation),          motion.party.affiliation = factor(x = motion.party.affiliation))
+glimpse(handeset.tib)
+
+# have a look at the distribution per party
+handeset.tib |> 
+  count(motion.party.affiliation, sort = TRUE)
+handeset.tib |> 
+  count(party.affiliation, sort = TRUE)
+
+# now start to look at the existing sentiment analysis. 0 is negative, 1 is positive. manual.motion is the sentiment manually applied (using a gold-standard annotation approach) to the motion. 
+handeset.tib |> 
+  count(motion.party.affiliation, manual.motion, sort = TRUE)
+
+# It looks like motions tend to be negative in sentiment, lets see
+handeset.tib |> count(manual.motion)
+
+# What about the sentiment of speeches?
+handeset.tib |> count(manual.speech)
+```
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
