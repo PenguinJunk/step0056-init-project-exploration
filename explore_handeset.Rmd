@@ -44,12 +44,57 @@ handeset.tib |> count(manual.motion)
 # What about the sentiment of speeches?
 handeset.tib |> count(manual.speech)
 ```
-## Including Plots
+## Are there science terms?
+Start with the motions - look at what these are about
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r handeset.tib title}
+# create a tibble from the the motion title variable
+motions_titles.tib <- handeset.tib |> select(title)
+# I could turn these into factors since they have standard patterns. I'm not sure this would be useful. There are a few motions that may have scientific content, but not a great deal.
+```
+Search through the motions and utterances
+```{r handeset.tib climate}
+srch_term <- "climate"
+climate_utt.tib <- handeset.tib |> 
+  filter(
+    (grepl(srch_term, motion)) |
+    (grepl(srch_term, utt1)) |
+    (grepl(srch_term, utt2)) |
+    (grepl(srch_term, utt3)) |
+    (grepl(srch_term, utt4)) |
+    (grepl(srch_term, utt5))
+    )
+glimpse(climate_utt.tib)
+climate_utt.tib |> count(manual.motion, manual.speech)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r handeset.tib ai}
+srch_term <- "artificial intelligence"
+ai_utt.tib <- handeset.tib |> 
+  filter(
+    (grepl(srch_term, motion)) |
+    (grepl(srch_term, utt1)) |
+    (grepl(srch_term, utt2)) |
+    (grepl(srch_term, utt3)) |
+    (grepl(srch_term, utt4)) |
+    (grepl(srch_term, utt5))
+    )
+glimpse(ai_utt.tib)
+ai_utt.tib |> count(manual.motion, manual.speech)
+```
+
+```{r handeset.tib science}
+srch_term <- "science"
+science_utt.tib <- handeset.tib |> 
+  filter(
+    (grepl(srch_term, motion)) |
+    (grepl(srch_term, utt1)) |
+    (grepl(srch_term, utt2)) |
+    (grepl(srch_term, utt3)) |
+    (grepl(srch_term, utt4)) |
+    (grepl(srch_term, utt5))
+    )
+#glimpse(science_utt.tib)
+#science_utt.tib |> count(manual.motion, manual.speech)
+```
+
